@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="object">
+        <img class="object_img" src="{{ monument.picture.url }}" alt="{{ monument.name }} picture">
+        <div class="object_content">
+            <h1>{{ monument.name }}</h1>
+            <h5>{{ monument.description }}</h5>
+        </div>
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="object_list">
+        <form class="d-flex" role="search" action="{% url 'showplaces:list_showplace' %}" method="get">
+        {% csrf_token %}
+        <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search" name="search">
+        <button class="btn btn-outline-secondary" type="submit">Поиск</button>
+        </form>
+        {% for showplace in ctx %}
+            <a style="color: black" href="/showplaces/detail_showplace/{{ showplace.id }}">
+                <div class="object_list_container">
+                    <div class="object_list_content ">
+                        <h4>{{ showplace.name }}</h4>
+                        {{ showplace.description | truncatechars:190}}
+                    </div>
+                <img class="object_list_img" src="{{ showplace.picture.url }}" alt="{{ showplace.name }} picture">
+            </div>
+            </a>
+
+        {% endfor %}
+    </div>
+{% endblock %}

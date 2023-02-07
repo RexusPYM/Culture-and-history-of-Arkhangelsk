@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="object">
+        <img class="object_img" src="{{ ctx.picture.url }}" alt="{{ ctx.name }} picture">
+        <div class="object_content">
+            <h1>{{ ctx.name }}</h1>
+            <h5>{{ ctx.description }}</h5>
+        </div>
+
+    </div>
+
+{% endblock %}

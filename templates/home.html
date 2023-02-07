@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form style="border-style: dashed" class="d-flex" role="search" action="{% url 'showplaces:list_showplace' %}" method="get">
+        {% csrf_token %}
+        <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search" name="search">
+        <button class="btn btn-outline-secondary" type="submit">Поиск</button>
+    </form>
+{% endblock %}
