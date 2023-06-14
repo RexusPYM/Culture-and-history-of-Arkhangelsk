@@ -9,7 +9,7 @@
     <title>Title</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-light">
+    <nav class="navbar navbar-expand-lg bg-light bottom-black">
         <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'home' %}">Арх.История</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,12 +17,17 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link active" aria-current="page" href="{% url 'monuments:list_monument' %}">Памятники</a>
-                <a class="nav-link active" href="{% url 'showplaces:list_showplace' %}">Достопримечательности</a>
-                <a class="nav-link active" href="{% url 'culture:list_culture' %}">Культура</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'historical_object:list_object' 'monument' %}">Памятники</a>
+                <a class="nav-link active" href="{% url 'historical_object:list_object' 'showplace' %}">Достопримечательности</a>
+                <a class="nav-link active" href="{% url 'historical_object:list_object' 'culture' %}">Культура</a>
             </div>
         </div>
         </div>
+        <form class="d-flex" role="search" action="{% url 'home' %}" method="get">
+            {% csrf_token %}
+            <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search" name="search">
+            <button class="btn btn-outline-secondary" type="submit">Поиск</button>
+        </form>
     </nav>
     {% block content %}
     {% endblock %}

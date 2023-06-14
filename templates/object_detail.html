@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="object">
+        {% if ctx.picture %}
+            <img class="object_img" src="{{ ctx.picture.url }}" alt="{{ ctx.name }}">
+        {% else %}
+            <img class="object_img" src="" alt="{{ ctx.name }}">
+        {% endif %}
+        <div class="object_content">
+            <h1>{{ ctx.name }}</h1>
+            <h5>{{ ctx.description }}</h5>
+        </div>
+    </div>
+{% endblock %}

@@ -13,6 +13,10 @@
 }
 
 .d-flex{
+    margin-right: 10px;
+}
+
+.bottom-black{
     border-bottom-color: #8E8D8A !important;
     border-bottom: solid !important;
 }
@@ -85,7 +89,7 @@ body{
     /*display: flex;*/
     /*justify-content: space-between;*/
     /*position: relative;*/
-    border-style: dashed;
+    /*border-style: dashed;*/
     overflow: hidden;
 
 }

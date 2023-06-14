@@ -1,23 +1,42 @@
 {% extends 'base.html' %}
 {% block content %}
+{#    <div class="object_list">#}
+{#        {% for object in ctx %}#}
+{#            <a style="color: black" href="/{{ object.object_type }}s/detail_{{ object.object_type }}/{{ object.id }}">#}
+{#                <div class="object_list_container">#}
+{#                    <div class="object_list_content ">#}
+{#                        <h4>{{ object.name }}</h4>#}
+{#                        {{ object.description | truncatechars:190}}#}
+{#                    </div>#}
+{#                    {% if object.picture %}#}
+{#                        <img class="object_list_img" src="{{ object.picture.url }}" alt="{{ object.name }} picture">#}
+{#                    {% else %}#}
+{#                        <img class="object_list_img" src="" alt="{{ object.name }} picture">#}
+{#                    {% endif %}#}
+{#                </div>#}
+{#            </a>#}
+{##}
+{#        {% endfor %}#}
+{#    </div>#}
+
     <div class="object_list">
-        <form class="d-flex" role="search" action="{% url 'home' %}" method="get">
-        {% csrf_token %}
-        <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search" name="search">
-        <button class="btn btn-outline-secondary" type="submit">Поиск</button>
-        </form>
         {% for object in ctx %}
-            <a style="color: black" href="/{{ object.object_type }}s/detail_{{ object.object_type }}/{{ object.id }}">
+            <a style="color: black" href="/historical_object/detail_object/{{ object.id }}">
                 <div class="object_list_container">
                     <div class="object_list_content ">
                         <h4>{{ object.name }}</h4>
                         {{ object.description | truncatechars:190}}
                     </div>
-                <img class="object_list_img" src="{{ object.picture.url }}" alt="{{ object.name }} picture">
-            </div>
+                    {% if object.picture %}
+                        <img class="object_list_img" src="{{ object.picture.url }}" alt="{{ object.name }} picture">
+                    {% else %}
+                        <img class="object_list_img" src="" alt="{{ object.name }} picture">
+                    {% endif %}
+                </div>
             </a>
 
         {% endfor %}
+
     </div>
 
 {% endblock %}
