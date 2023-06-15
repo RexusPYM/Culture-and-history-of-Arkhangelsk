@@ -8,9 +8,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.CommonSearchListView.as_view(), name='home'),
-    path('cultures/', include('culture.urls')),
-    path('monuments/', include('monuments.urls')),
-    path('showplaces/', include('showplaces.urls')),
+    path('historical_object/', include('historical_objects.urls')),
 ]
 
 # нужно что-бы показывались картинки

@@ -2,9 +2,6 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView
 from .models import HistoricalObject
 from django.urls import reverse_lazy
-from monuments.models import Monument
-from culture.models import Culture
-from showplaces.models import Showplace
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -20,7 +17,7 @@ class HistoricalObjectListView(ListView):
         # query = self.request.GET.get('search')
         # if query:
         #     query_set = HistoricalObject.objects.filter(object_type=query)
-        #     return query_set
+        #     return query_setg
         # query_set = HistoricalObject.objects.all()
         query_set = HistoricalObject.objects.filter(object_type__name__iregex=object_type)
         return query_set
