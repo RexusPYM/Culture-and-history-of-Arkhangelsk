@@ -43,9 +43,17 @@ class HistoricalObjectCreateView(CreateView):
 
 
 class HistoricalObjectAPIView(APIView):
-    def get(self, request):
-        o = HistoricalObject.objects.all()
-        return Response({'posts': HistoricalObjectSerializer(o, many=True).data})
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        if not pk:
+            objects = HistoricalObject.objects.all()
+            return Response({'posts': HistoricalObjectSerializer(objects, many=True).data})
+
+        try:
+            ob = HistoricalObject.objects.get(pk=pk)
+            return Response({"post": HistoricalObjectSerializer(ob).data})
+        except:
+            return Response({"error": "Object does not exist"})
 
     def post(self, request):
         serializer = HistoricalObjectSerializer(data=request.data)
@@ -74,3 +82,15 @@ class HistoricalObjectAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({"posts": serializer.data})
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        if not pk:
+            return Response({"error": "Method DELETE is not allowed"})
+
+        try:
+            HistoricalObject.objects.get(pk=pk).delete()
+        except:
+            return Response({"error": "Object does not exist"})
+
+        return Response({"post": f"deleted post {pk}"})
