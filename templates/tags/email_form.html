@@ -1,0 +1,12 @@
+<div class="object">
+    <form id="email_form" method="post" action="{% url 'historical_object:subsribe_email' %}">
+        {% csrf_token %}
+        {% for f in email_form %}
+            <p>{{ f.label }} {{ f }}</p>
+            <p>{{ f.error }}</p>
+            <div style="color: red" class="form-error" id="form-error"></div>
+        {% endfor %}
+
+        <button type="submit" id="btn_submit">Подписаться</button>
+    </form>
+</div>

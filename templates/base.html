@@ -5,6 +5,8 @@
     {% load static %}
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
     <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/jquery-3.7.0.js' %}"></script>
+    <script src="{% static 'js/malsup.js' %}"></script>
     <link rel="stylesheet" href="{% static 'master.css' %}">
     <title>Title</title>
 </head>
@@ -31,5 +33,11 @@
     </nav>
     {% block content %}
     {% endblock %}
+
+    <footer>
+        {% include 'includes/email_subscribe.html' %}
+    </footer>
+
+    <script src="{% static 'js/historical_objects.js' %}"></script>
 </body>
 </html>

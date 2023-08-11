@@ -1,11 +1,15 @@
+import json
+
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView
-from .models import HistoricalObject
+from .models import HistoricalObject, Mail
 from django.urls import reverse_lazy
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import HistoricalObjectSerializer
+from .forms import EmailForm, HistoricalObjectForm
 
 
 class HistoricalObjectListView(ListView):
@@ -29,6 +33,11 @@ class HistoricalObjectDetailView(DetailView):
     model = HistoricalObject
 
 
+def add_historical_object(request):
+    ctx = {'form': HistoricalObjectForm}
+    return render(request, 'object_create.html', ctx)
+
+
 class HistoricalObjectCreateView(CreateView):
     model = HistoricalObject
     fields = "__all__"
@@ -37,9 +46,32 @@ class HistoricalObjectCreateView(CreateView):
     success_url = reverse_lazy("home")
 
 
+class EmailCreateView(CreateView):
+    model = Mail
+    fields = ['mail']
+    # form_class = EmailForm
+    success_url = reverse_lazy("home")
+
+
+def existing_email(request):
+    if request.method == 'GET':
+        email = request.GET.get('email', '')
+        print(email)
+        try:
+            Mail.objects.get(mail=email)
+            return HttpResponse(json.dumps({"email": False}))
+        except Exception as ex:
+            print(ex)
+            return HttpResponse(json.dumps({"email": True}))
+
 # class HistoricalObjectAPIView(generics.ListAPIView):
 #     queryset = HistoricalObject.objects.all()
 #     serializer_class = HistoricalObjectSerializer
+
+
+class HistoricalObjectAPIList(generics.ListCreateAPIView):
+    queryset = HistoricalObject.objects.all()
+    serializer_class = HistoricalObjectSerializer
 
 
 class HistoricalObjectAPIView(APIView):
