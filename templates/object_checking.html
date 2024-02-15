@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="object_list">
+        {% for object in ctx %}
+            <div class="object_list_container block_object_list_container">
+                <div class="object_list_content ">
+                    <h4>{{ object.name }}</h4>
+                    {{ object.description | truncatechars:190}}
+                </div>
+                {% if object.picture %}
+                    <img class="object_list_img" src="{{ object.picture.url }}" alt="{{ object.name }} picture">
+                {% else %}
+                    <img class="object_list_img" src="" alt="{{ object.name }} picture">
+                {% endif %}
+            </div>
+            <div class="buttons_list_object_list_container btn-group-vertical">
+                <input class="button_object_list_container" value="Одобрить" type="button" onclick="location.href='{% url 'historical_object:add_object' object.id %}'"/>
+                <input class="button_object_list_container" value="Отклонить" type="button" onclick="location.href='{% url 'historical_object:delete_object' object.id %}'"/>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+

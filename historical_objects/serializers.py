@@ -13,22 +13,12 @@ from rest_framework.parsers import JSONParser
 #         self.description = description
 
 
-class HistoricalObjectSerializer(serializers.Serializer):
-    id = serializers.CharField()
-    name = serializers.CharField(max_length=255)
-    object_type = serializers.SlugRelatedField(slug_field='name', queryset=ObjectTypes.objects.all())
-    description = serializers.CharField()
+class HistoricalObjectSerializer(serializers.ModelSerializer):
+    object_type = serializers.CharField(source="object_type.name")
 
-    def create(self, validated_data):
-        return HistoricalObject.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
-        instance.object_type = validated_data.get('object_type', instance.object_type)
-        instance.description = validated_data.get('description', instance.description)
-        instance.save()
-        return instance
-
+    class Meta:
+        model = HistoricalObject
+        fields = ("name", "object_type", "description")
 
 # def encode():
 #     model = HistoricalObject('Super pamyatnik', 'Opisanie super pamyatnika')
@@ -45,9 +35,3 @@ class HistoricalObjectSerializer(serializers.Serializer):
 #     serializer = HistoricalObjectSerializer(data=data)
 #     serializer.is_valid()
 #     print(serializer.data)
-
-
-# class HistoricalObjectSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Monument
-#         fields = ('name', 'object_type')

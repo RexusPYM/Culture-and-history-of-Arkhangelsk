@@ -1,27 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-{#    <div class="object_list">#}
-{#        {% for object in ctx %}#}
-{#            <a style="color: black" href="/{{ object.object_type }}s/detail_{{ object.object_type }}/{{ object.id }}">#}
-{#                <div class="object_list_container">#}
-{#                    <div class="object_list_content ">#}
-{#                        <h4>{{ object.name }}</h4>#}
-{#                        {{ object.description | truncatechars:190}}#}
-{#                    </div>#}
-{#                    {% if object.picture %}#}
-{#                        <img class="object_list_img" src="{{ object.picture.url }}" alt="{{ object.name }} picture">#}
-{#                    {% else %}#}
-{#                        <img class="object_list_img" src="" alt="{{ object.name }} picture">#}
-{#                    {% endif %}#}
-{#                </div>#}
-{#            </a>#}
-{##}
-{#        {% endfor %}#}
-{#    </div>#}
-
     <div class="object_list">
         {% for object in ctx %}
-            <a style="color: black" href="/historical_object/detail_object/{{ object.id }}">
+            <a style="color: black" href="{% url 'historical_object:detail_object' object.id %}">
                 <div class="object_list_container">
                     <div class="object_list_content ">
                         <h4>{{ object.name }}</h4>

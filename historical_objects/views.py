@@ -1,15 +1,16 @@
 import json
 
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView
-from .models import HistoricalObject, Mail
+from .models import HistoricalObject, Mail, TemporaryHistoricalObject, ProposedHistoricalObject
 from django.urls import reverse_lazy
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import HistoricalObjectSerializer
-from .forms import EmailForm, HistoricalObjectForm
+from .forms import EmailForm, HistoricalObjectForm, ProposeHistoricalObjectForm
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
 class HistoricalObjectListView(ListView):
@@ -33,17 +34,32 @@ class HistoricalObjectDetailView(DetailView):
     model = HistoricalObject
 
 
-def add_historical_object(request):
-    ctx = {'form': HistoricalObjectForm}
-    return render(request, 'object_create.html', ctx)
+# def add_historical_object(request):
+#     ctx = {'form': HistoricalObjectForm}
+#     return render(request, 'object_create.html', ctx)
 
 
-class HistoricalObjectCreateView(CreateView):
-    model = HistoricalObject
-    fields = "__all__"
+class ProposeHistoricalObjectCreateView(LoginRequiredMixin, CreateView):
+    form_class = ProposeHistoricalObjectForm
     template_name = "object_create.html"
     context_object_name = "ctx"
     success_url = reverse_lazy("home")
+    raise_exception = True
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.author = self.request.user
+        instance.save()
+        return super().form_valid(form)
+
+
+class CheckHistoricalObjectsListView(ListView):
+    template_name = "object_checking.html"
+    context_object_name = "ctx"
+
+    def get_queryset(self):
+        query_set = ProposedHistoricalObject.objects.all()
+        return query_set
 
 
 class EmailCreateView(CreateView):
@@ -55,6 +71,7 @@ class EmailCreateView(CreateView):
 
 def existing_email(request):
     if request.method == 'GET':
+        print('passing request')
         email = request.GET.get('email', '')
         print(email)
         try:
@@ -63,6 +80,50 @@ def existing_email(request):
         except Exception as ex:
             print(ex)
             return HttpResponse(json.dumps({"email": True}))
+
+
+def add_historical_object_to_main_table(request, **kwargs):
+    proposed_historical_object_id = kwargs['pk']
+    proposed_historical_object = ProposedHistoricalObject.objects.get(pk=proposed_historical_object_id)
+
+    new_historical_object = HistoricalObject()
+    new_historical_object.name = proposed_historical_object.name
+    new_historical_object.object_type = proposed_historical_object.object_type
+    new_historical_object.description = proposed_historical_object.description
+    new_historical_object.picture = proposed_historical_object.picture
+    new_historical_object.author = proposed_historical_object.author
+    new_historical_object.checked_by = request.user
+    new_historical_object.save()
+
+    proposed_historical_object.delete()
+
+    return redirect("historical_object:check_object")
+
+
+def delete_historical_object_from_proposed_table(request, **kwargs):
+    proposed_historical_object_id = kwargs['pk']
+    proposed_historical_object = ProposedHistoricalObject.objects.get(pk=proposed_historical_object_id)
+    proposed_historical_object.delete()
+
+    return redirect("historical_object:check_object")
+
+
+def save_db(request):
+    print('kek')
+    # Получаем объекты (записи) из исходной модели
+    data = TemporaryHistoricalObject.objects.all()
+
+    # Копируем данные из исходной модели в целевую модель
+    for object_data in data:
+        new_entry = HistoricalObject()
+        new_entry.name = object_data.name  # Замени поле1 и поля согласно своей модели
+        new_entry.object_type = object_data.object_type
+        new_entry.description = object_data.description
+        new_entry.picture = object_data.picture
+
+        new_entry.save()  # Сохраняем скопированные данные в новой модели
+
+    return HttpResponse('Данные скопированы')
 
 # class HistoricalObjectAPIView(generics.ListAPIView):
 #     queryset = HistoricalObject.objects.all()
