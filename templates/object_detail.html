@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load user_profiles_tags %}
 
 {% block content %}
     <div class="object">
@@ -12,4 +13,24 @@
             <h5>{{ ctx.description }}</h5>
         </div>
     </div>
+    <br>
+    <div class="object">
+        {% if user.is_authenticated %}
+            <p>Оставить комментарии</p>
+            {% comment_form ctx.id %}
+        {% else %}
+            <a class="nav-link active" href="{% url 'login' %}"> Что-бы комментировать, войдите в аккаунт </a>
+        {% endif %}
+        <br>
+        {% comments_show ctx.id as comments %}
+        {% for comment in comments %}
+            <div class="object">
+                <div style="font-weight: bold">{{ comment.profile.user.username }}</div>
+                {{ comment.created_at }}
+                <br>
+                {{ comment.text }}
+            </div>
+        {% endfor %}
+    </div>
+
 {% endblock %}

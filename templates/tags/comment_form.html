@@ -1,0 +1,10 @@
+<div class="object">
+    <form id="comment_form" method="post" action="{% url 'user_profiles:make_comment' historical_object_id %}">
+        {% csrf_token %}
+        {% for f in comment_form %}
+            <p>{{ f.label }} {{ f }}</p>
+        {% endfor %}
+
+        <button type="submit" id="btn_submit">Отправить</button>
+    </form>
+</div>
